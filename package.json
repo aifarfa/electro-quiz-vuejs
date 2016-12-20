@@ -8,10 +8,13 @@
     "dev": "node build/dev-server.js",
     "build": "node build/build.js",
     "unit": "karma start test/unit/karma.conf.js --single-run",
+    "test:watch": "karma start test/unit/karma.conf.js --watch",
     "test": "npm run unit",
     "lint": "eslint --ext .js,.vue src test/unit/specs"
   },
   "dependencies": {
+    "decimal.js": "^7.1.0",
+    "immutable": "^3.8.1",
     "lodash": "^4.17.2",
     "vue": "^2.1.0"
   },
