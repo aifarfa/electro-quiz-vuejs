@@ -55,8 +55,8 @@ export default {
   },
   methods: {
     randomSerie: function () {
-      // random sample 9
-      this.resistors = _.sampleSize(this.availableResistor, 9)
+      const numberOfR = _.random(4, 9) // 4-9 R
+      this.resistors = _.sampleSize(this.availableResistor, numberOfR)
       this.question = _.sample(this.availableQuestions)
       this.answer = 0
       console.log('random result', this.question.text, this.resistors)
