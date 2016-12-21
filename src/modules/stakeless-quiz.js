@@ -1,25 +1,27 @@
-import Decimal from 'decimal.js'
+import BigNumber from 'bignumber.js'
 import {List} from 'immutable'
 
-export const getTotalResistance = (resistors, selected) => {
-  const all = List(resistors)
-  const selectedIndex = all.findKey(r => r === selected)
-  if (selectedIndex < 0) {
-    throw new Error('selected R not found', selected)
+export const getTotalResistance = function (resistors, selectedR) {
+  const allR = List(resistors)
+  const index = allR.findKey(r => r === selectedR)
+  if (index < 0) {
+    throw new Error('selected R not found', selectedR)
   }
-  const accumulate = (prev, r) => new Decimal(1 / r).add(prev).toNumber() // adding previous R + 1/Rn
-  const remain = all.remove(selectedIndex) // exclude selected R
-  return remain.reduce(accumulate, selected) // sum [n: 1/Rn for n in remain] + selected
+  const sumOfParallelR = (prev, r) => new BigNumber(1 / r).add(prev).toNumber() // adding previous R + 1/Rn
+  const remainingR = allR.remove(index) // exclude selected R
+  return remainingR.reduce(sumOfParallelR, selectedR) // sum [n: 1/Rn for n in remain] + selected
 }
 
-export const getResistanceList = (resistors) => {
+export const getResistanceList = function (resistors) {
   return resistors.map(r => getTotalResistance(resistors, r))
 }
 
-export const max = (values) => values.reduce((prev, value) => {
-  return new Decimal(value).greaterThan(prev) ? value : prev
-})
+export const max = function (values) {
+  const whichIsGreater = (a, b) => (a > b) ? a : b // get greater value
+  return values.reduce(whichIsGreater)
+}
 
-export const min = (values) => values.reduce((prev, value) => {
-  return new Decimal(value).lessThan(prev) ? value : prev
-})
+export const min = function (values) {
+  const whichIsLesser = (a, b) => (a < b) ? a : b // get lesser value
+  return values.reduce(whichIsLesser)
+}

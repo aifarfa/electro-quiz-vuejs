@@ -54,8 +54,8 @@ describe('stakeless-quiz', () => {
     })
 
     it('find max R', () => {
-      const minR = max(getResistanceList(sampleList))
-      expect(minR).to.eq(50.4)
+      const maxR = max(getResistanceList(sampleList))
+      expect(maxR).to.eq(50.4)
     })
   })
 })
