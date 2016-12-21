@@ -9,10 +9,15 @@
     <div class="block">
       <div v-if="question">
         <h2>{{question.text}}</h2>
-        <code>TODO: finding {{question.key}} R</code>
       </div>
       <div v-if="answer != 0">
-        <pre>Your answer: {{answer}}</pre>
+        <pre>
+          Your answer: {{answer}}
+          selected R: {{selected}}
+          expected: {{expected}}
+        </pre>
+        <div v-if="isCorrect" class="block bg-success">Correct!</div>
+        <div v-if="!isCorrect" class="block bg-warning">Wrong!</div>
       </div>
     </div>
   </div>
@@ -20,6 +25,7 @@
 
 <script>
 import Resister from './Resister'
+import * as quiz from '../modules/stakeless-quiz'
 import _ from 'lodash'
 
 const initialState = {
@@ -33,7 +39,10 @@ const initialState = {
     key: 'min'
   }],
   question: null,
-  resistors: []
+  resistors: [],
+  selected: 0,
+  expected: 0,
+  isCorrect: false
 }
 
 export default {
@@ -53,9 +62,16 @@ export default {
       console.log('random result', this.question.text, this.resistors)
     },
     setAnswer: function (value) {
-      // TODO: check if value is correct answer?
-      console.log('setAnswer', value)
+      // check if value is correct answer?
+      const allR = quiz.getResistanceList(this.resistors)
+      const answerMap = {
+        min: quiz.min(allR),
+        max: quiz.max(allR)
+      }
       this.answer = value
+      this.selected = quiz.getTotalResistance(this.resistors, this.answer)
+      this.expected = answerMap[this.question.key]
+      this.isCorrect = (this.selected === this.expected)
     }
   }
 }
